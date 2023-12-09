@@ -10,6 +10,9 @@
             margin: 0;
             padding: 0;
             background: url("../PiC/background.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
         }
 
         .header {
@@ -17,6 +20,9 @@
             text-align: right;
             padding: 15px;
             font-size: 2em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .position{
             display: flex;
@@ -91,12 +97,14 @@
 </head>
 <body>
     <div class="header">
-        <button class="btn">Sign Up</button>
-        <button class="btn">Sign In</button>
         <div class="position">
             <span class="first">GA</span>
             <span class="second">Hub</span>
         </div>
+        <div>
+            <button class="btn">Sign Up</button>
+            <button class="btn">Sign In</button>
+            </div>
     </div>
     <div class="h1">
             <span class="first" > GA</span><span class="second"> Hub</span>
@@ -120,3 +128,4 @@
     </div>
 </body>
 </html>
+
