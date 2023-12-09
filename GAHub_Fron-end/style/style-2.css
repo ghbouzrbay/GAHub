@@ -1,0 +1,55 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    padding: 20px;
+   }
+  
+   h1 {
+    color: #333;
+   }
+   
+   input[type="file"] {
+    margin-bottom: 30px;
+    font-size: 16px;
+    display: flex;
+    justify-content: right;
+   }
+   
+   button {
+            background-color: mediumorchid;
+            color: black;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            font-size: 16px;
+            margin: 4px 5px;
+            transition: 0.5s;
+   }
+   .btn-container {
+    display: flex;
+    justify-content: center;
+    padding: 160px;
+}
+   
+   button:hover {
+    background-color:rgba(247, 0, 255, 0.37);
+   }
+   
+   #excelTable {
+    margin-top: 20px;
+    border-collapse: collapse;
+    width: 100%;
+   }
+   
+   #excelTable th,
+   #excelTable td {
+     border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+   }
+   
+   #excelTable th {
+    background-color: #f2f2f2;
+   }
