@@ -3,6 +3,77 @@ body {
     background-color: #f4f4f4;
     padding: 20px;
    }
+   .base{
+    background-color: #f0f0f0;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+   }
+   .container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+.content {
+            
+  text-align: center;
+  color: black;
+  padding: 50px;
+}
+.encadre{
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  border: 3px dashed black;
+  padding: 10px;
+  width: 500px;
+  background-color: white;
+} 
+
+.small-content {
+  text-align: center;
+  font-size: 0.8em;
+  color: black;
+  padding: 20px;
+}
+
+.column-1 {
+  background-color: white;
+    flex: 1;
+    padding: 20px;
+    box-sizing: border-box;
+}
+.style-1{
+  color: #dabcd7;
+  text-align: center;
+  border: none;
+  font-size: 25px;
+  margin: 16px;
+  padding: 40px;
+  font-family: 'young serif', serif;
+
+}
+.column-2{
+  background-color: #dabcd7;
+  flex: 1;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.style-2{
+  color: white;
+  text-align: center;
+  border: none;
+  font-size: 25px;
+  margin: 16px;
+  padding: 40px 70px;
+  font-family: 'young serif', serif;
+
+}
+.column:nth-child(odd) {
+    background-color: #f0f0f0;
+}
   
    h1 {
     color: #333;
@@ -33,9 +104,22 @@ body {
     padding: 160px;
 }
    
-   button:hover {
+  button:hover {
     background-color:rgba(247, 0, 255, 0.37);
    }
+ center{
+    background-color:white ;
+    color: black;
+    padding: 0px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 0px;
+    margin: 0px;
+    transition: 0.5s;
+}
+center:hover{
+    color:rgb(185, 185, 185);
+}
    
    #excelTable {
     margin-top: 20px;

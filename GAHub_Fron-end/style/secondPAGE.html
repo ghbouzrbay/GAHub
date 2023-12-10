@@ -23,6 +23,7 @@
             justify-content: space-between;
             align-items: center;
         }
+   
         .position{
             display: flex;
             justify-content: left;
@@ -49,54 +50,97 @@
  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.2/xlsx.full.min.js"></script>
 </head>
 <body>
-    <div class="header">
-        <div>
-            <div class="position">
-                <span class="first">GA</span>
-                <span class="second">Hub</span>
+    <div class="base">
+        <div class="header">
+            <div>
+                <div class="position">
+                    <span class="first">GA</span>
+                    <span class="second">Hub</span>
+                </div>
+            </div>
+  
+            <div>
+                <button class="btn">Next</button>
             </div>
         </div>
-        <div>
-            <button class="btn">Next</button>
-        </div>
-    </div>
-    <div class="h1">
+        <div class="h1">
             <span class="first" > GA</span><span class="second"> Hub</span>
-    </div>
-            <div class="body">
-   
-                    <input type="file" id="excelFile"/>
-                    <div id="excelTable"></div>
-                    <script src="../JS/EXEL_fonction.js"></script>
-                    <div class="btn-container">
-                    <div class="button"><button onclick="loadExcelData()">Load Data</button></div>
-
-                    <div class="button"><button onclick="createExcelFile()">Créer un fichier exel</button>
-                        <script>
-                            async function createExcelFile() {
-                                const opts = {
-                                    types: [
-                                        {
-                                            description: 'Excel Files',
-                                            accept: {
-                                                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx'],
-                                                'application/vnd.ms-excel': ['.xls']
-                                            }
-                                        }
-                                    ]
-                                };
-                                const fileHandle = await window.showSaveFilePicker(opts);
-                                const writable = await fileHandle.createWritable();
-                                const blob = new Blob(["\ufeffSheetJS1,2,3\nSheetJS2,3,4"], { type: "text/csv" });
-                                await writable.write(blob);
-                                await writable.close();
-                            }
-
-                            if (!('showSaveFilePicker' in window)) {
-                                alert('Votre navigateur ne prend pas en charge l\'API File System Access. Veuillez essayer dans un autre navigateur ou mettre à jour votre navigateur.');
-                            }
-                        </script>
+        </div>
+                <div class="body">
+                    <div class="content">
+                        <p>
+                            <span class="encadre">
+                                GAHub is a complete and integrated business management solution.<br> 
+                                It incorporates collaborative workspaces, a version control<br> 
+                                system similar to GitHub, and Excel-inspired data management<br> 
+                                facilitate project collaboration and data management.
+                            </span>
+                        </p>
                     </div>
+                <div class="small-content">
+                     <p>GAHub enables teams to work together seamlessly and focus on innovation and project success. It offers a friendly and easy-to-use interface, allowing users to focus on their work rather than technical complexities.</p>
+                </div>
+                <div class="btn-container">
+                    <button class="btn">Sign Up</button>
+                    <button class="btn">Try It</button>
+                </div>
+    </div>
+                <div class="container">
+
+                    <div class="column-1">
+                        <div class="style-1">
+                            <p>
+                                Create your own file on the application <br>
+                                 to facilitate your work and publish it<br>
+                                  or choose your partner to help
+                            </p>
+                        </div>
+                        <div class="btn-container">
+            
+    
+                             <div><button onclick="createExcelFile()">Create A File</button>
+                                <script>
+                                    async function createExcelFile() {
+                                        const opts = {
+                                            types: [
+                                                {
+                                                    description: 'Excel Files',
+                                                    accept: {
+                                                        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx'],
+                                                        'application/vnd.ms-excel': ['.xls']
+                                                    }
+                                                }
+                                            ]
+                                        };
+                                        const fileHandle = await window.showSaveFilePicker(opts);
+                                        const writable = await fileHandle.createWritable();
+                                        const blob = new Blob(["\ufeffSheetJS1,2,3\nSheetJS2,3,4"], { type: "text/csv" });
+                                        await writable.write(blob);
+                                        await writable.close();
+                                    }
+
+                                    if (!('showSaveFilePicker' in window)) {
+                                        alert('Votre navigateur ne prend pas en charge l\'API File System Access. Veuillez essayer dans un autre navigateur ou mettre à jour votre navigateur.');
+                                    }
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column-2">
+                        <div class="style-2">
+                            <p>
+                                Upload your own file to the application<br>
+                                 to facilitate your work and publish it<br>
+                                  or choose your partner to help
+                            </p>
+                        </div>
+                        <input type="file" id="excelFile"/>
+                        <div id="excelTable"></div>
+                        <script src="../JS/EXEL_fonction.js"></script>
+                        <div class="btn-container">
+                        <div class="button"><button onclick="loadExcelData()">Load Data</button></div>
+                    </div>
+                </div>
 
             </div>
 </body>
