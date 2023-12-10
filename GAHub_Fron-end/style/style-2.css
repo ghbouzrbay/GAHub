@@ -1,10 +1,10 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background:url(../PiC/GOODbg.png);;
     padding: 20px;
    }
    .base{
-    background-color: #f0f0f0;
+    background-color: rgb(241, 234, 234);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -17,18 +17,20 @@ body {
 .content {
             
   text-align: center;
-  color: black;
+  color: white;
   padding: 50px;
 }
 .encadre{
   display: inline-flex;
+  box-shadow: 15px 6px 6px #4D084D;
   justify-content: center;
   align-items: center;
   margin: 0;
-  border: 3px dashed black;
   padding: 10px;
-  width: 500px;
-  background-color: white;
+  width: 600px;
+  margin: 16px;
+  font-size: 19px;
+  background-color: rgb(107, 104, 104);
 } 
 
 .small-content {
