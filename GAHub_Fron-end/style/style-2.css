@@ -109,6 +109,10 @@ body {
   button:hover {
     background-color:rgba(247, 0, 255, 0.37);
    }
+   a{
+    color: black;
+    text-decoration: none;
+   }
  center{
     background-color:white ;
     color: black;
