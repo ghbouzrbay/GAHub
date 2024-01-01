@@ -4,7 +4,7 @@ body {
     padding: 30px;
    }
    .base{
-    background-color: #f3efe8;
+    background-color: #f3f1ece1;
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -84,7 +84,7 @@ body {
   flex: 1;
     padding: 20px;
     box-sizing: border-box;
-    width: 800px;
+    width: 550px;
     box-shadow: 10px 5px 5px #58a0ac;
 }
 .style-2{
@@ -98,6 +98,7 @@ body {
 
 }
 .encd{
+  background-color: white;
   box-shadow: 15px 6px 6px #2f585f;
 }
 
@@ -171,3 +172,4 @@ center:hover{
    #excelTable th {
     background-color: #f2f2f2;
    }
+

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>GAHub</title>
+ <style>
+     body {
+        font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: white;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+     }
+     .header {
+            background-color: rgba(255, 255, 255, 0.966);
+            text-align: right;
+            padding: 10px;
+            font-size: 2em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+   
+        .position{
+            display: flex;
+            justify-content: left;
+            padding: 10px 20px;
+            border: none;
+            align-items: center;
+        }
+          .h1{
+            text-align: center;
+            padding: 20px;
+            font-size: 6em;
+        }
+        .h2{
+            text-align: center;
+            padding: 20px;
+            font-size: 6em;
+        }
+        .first{
+            color: #0e6372;
+            box-shadow: 10px 5px 5px black;
+            font-family: Georgia, serif;
+            background-color: white;
+        }
+        .second{
+            color: black;
+        }
+     </style>
+ <link rel="stylesheet" href="second_page.css">
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.2/xlsx.full.min.js"></script>
+ <div class="header">
+
+    <div>
+
+        <div class="position">
+            <a class="first" href="PrincipalPage.html">GA</a>
+            <span class="second">Hub</span>
+
+            <a>
+                <img src="../PiC/owl-xxl.png" width="40px">
+            </a>
+ 
+        </div>
+    </div>
+
+    <div>
+        <button class="btn"><a href="SignUp.html">Next</a></button>
+    </div>
+</div>
+<body>
+    <div class="base">
+        
+        <div class="h1">
+            <span class="first" > GA</span><span class="second"> Hub</span>
+            <a>
+                <img src="../PiC/owl-xxl.png" width="90px">
+            </a>
+        </div>
+                <div class="content">
+                    <div class="encd">
+                        <a>
+                            <img src="../PiC/project-management-3914922-3243775.png" width="440px">
+                        </a>
+                        <form action="/create_project" method="post">
+                        <label for="project_name"><span class="style-min">Project Name:</span></label>
+                        <input type="text" id="project_name" name="project_name">
+                        <br>
+                        <label for="project_description"><span class="style-min">Project Description:</span></label>
+                        <input type="text" id="project_description" name="project_description">
+                        <br>
+                        <div class="btn-container">
+                            <button>Create Project</button>
+                        </div>
+                    </div>
+                    
+                    </form>
+                    <div class="content">
+                        <div class="encd">
+                            <a>
+                                <img src="../PiC/edit-profile-4486090-3838772.png" width="440px">
+                            </a>
+                            <form action="/create_collaborator" method="post">
+                                <label for="collaborator_name"><span class="style-min">Collaborator Name:</span></label>
+                                <input type="text" id="collaborator_name" name="collaborator_name">
+                                <br>
+                                <div class="btn-container">
+                                    <button >Collaborator</button>
+                                </div>
+                            </form>
+                        </div> 
+                    </div>
+                </div>
+    </body>
+</html>
