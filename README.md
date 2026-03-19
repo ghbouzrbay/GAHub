@@ -8,8 +8,9 @@
 > Built by **Adam El Madani** & **Ghita Bouzrbay**
 
 <div align="center">
-  <img src="static/assets/img1.png" width="500" style="margin-right: 10px;" />
-  <img src="static/assets/img2.png" width="500" />
+  <img src="static/assets/img1.png" width="800" />
+  <br><br>
+  <img src="static/assets/img2.png" width="800" />
 </div>
 
 ---
