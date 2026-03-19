@@ -7,6 +7,11 @@
 
 > Built by **Adam El Madani** & **Ghita Bouzrbay**
 
+<p float="left">
+  <img src="static/assets/img1.png" width="200" />
+  <img src="static/assets/img2.png" width="200" />
+</p>
+
 ---
 
 ## Features
