@@ -7,10 +7,10 @@
 
 > Built by **Adam El Madani** & **Ghita Bouzrbay**
 
-<p float="left">
-  <img src="static/assets/img1.png" width="200" />
-  <img src="static/assets/img2.png" width="200" />
-</p>
+<div align="center">
+  <img src="static/assets/img1.png" width="500" style="margin-right: 10px;" />
+  <img src="static/assets/img2.png" width="500" />
+</div>
 
 ---
 
