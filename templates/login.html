@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Sign In — GAHub{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="auth-card glass-card">
+        <h1>Welcome back</h1>
+        <p class="auth-subtitle">Sign in to continue to your workspace</p>
+
+        <form method="POST" action="{{ url_for('main.login') }}">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-control"
+                       placeholder="you@example.com" required autofocus>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control"
+                       placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Sign In</button>
+        </form>
+
+        <p class="auth-footer">
+            Don't have an account? <a href="{{ url_for('main.signup') }}">Sign up</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

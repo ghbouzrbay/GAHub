@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}GAHub — Business Management & Collaboration{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="landing-hero">
+    <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Business Management Reimagined
+    </div>
+
+    <h1 class="hero-title">
+        Collaborate. Manage.<br><span class="text-gradient">Innovate.</span>
+    </h1>
+
+    <p class="hero-subtitle">
+        GAHub is a complete business management solution with collaborative workspaces,
+        version control, and Excel-inspired data management to power your team's success.
+    </p>
+
+    <div class="hero-actions">
+        <a href="{{ url_for('main.signup') }}" class="btn btn-primary">
+            Get Started Free →
+        </a>
+        <a href="#features" class="btn btn-secondary">
+            Explore Features
+        </a>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section" id="features">
+    <div class="container">
+        <p class="section-label">Features</p>
+        <h2 class="section-title">Everything your team needs</h2>
+
+        <div class="features-grid">
+            <div class="feature-card glass-card">
+                <div class="feature-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                    </svg></div>
+                <h3>Project Management</h3>
+                <p>Create and manage projects effortlessly. Track progress, set descriptions, and organize your team's
+                    work in one place.</p>
+            </div>
+
+            <div class="feature-card glass-card">
+                <div class="feature-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg></div>
+                <h3>Team Collaboration</h3>
+                <p>Invite collaborators, assign roles, and work together in real-time. Build your team and ship projects
+                    faster.</p>
+            </div>
+
+            <div class="feature-card glass-card">
+                <div class="feature-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg></div>
+                <h3>Spreadsheet Editor</h3>
+                <p>Create Excel-like spreadsheets directly in the browser. Upload existing files or start from scratch
+                    with our built-in editor.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="landing-footer">
+    <p>© 2024 GAHub — Built by <strong>Adam El Madani</strong> & <strong>Ghita Bouzrbay</strong></p>
+</footer>
+{% endblock %}
