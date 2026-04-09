@@ -9,10 +9,22 @@
 <div class="dashboard-layout">
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
+        <!-- Profile -->
+        <div class="sidebar-profile">
+            <div class="sidebar-avatar">{{ current_user.username[0]|upper }}</div>
+            <div class="sidebar-profile-info">
+                <div class="sidebar-profile-name">{{ current_user.username }}</div>
+                <div class="sidebar-profile-email">{{ current_user.email }}</div>
+            </div>
+        </div>
+
         <div class="sidebar-section">
             <div class="sidebar-section-title">Navigation</div>
             <button class="sidebar-item active" data-view="projects" onclick="switchView('projects', this)">
                 <span class="item-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></span> My Projects
+            </button>
+            <button class="sidebar-item" data-view="activity" onclick="switchView('activity', this)">
+                <span class="item-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></span> Activity
             </button>
         </div>
 
@@ -32,9 +44,44 @@
 
         <!-- Projects View -->
         <div id="projects-view">
+            <!-- Stats Cards -->
+            <div class="stats-grid" id="stats-grid">
+                <div class="stat-card glass-card">
+                    <div class="stat-card-icon blue">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                    </div>
+                    <div>
+                        <div class="stat-card-value" id="stat-projects">-</div>
+                        <div class="stat-card-label">Total Projects</div>
+                    </div>
+                </div>
+                <div class="stat-card glass-card">
+                    <div class="stat-card-icon green">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    </div>
+                    <div>
+                        <div class="stat-card-value" id="stat-collaborators">-</div>
+                        <div class="stat-card-label">Collaborators</div>
+                    </div>
+                </div>
+                <div class="stat-card glass-card">
+                    <div class="stat-card-icon orange">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    </div>
+                    <div>
+                        <div class="stat-card-value" id="stat-spreadsheets">-</div>
+                        <div class="stat-card-label">Spreadsheets</div>
+                    </div>
+                </div>
+            </div>
+
             <div class="dashboard-header">
                 <h1>My Projects</h1>
                 <div class="dashboard-header-actions">
+                    <div class="search-bar">
+                        <span class="search-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
+                        <input type="text" id="search-input" placeholder="Search projects..." oninput="searchProjects()">
+                    </div>
                     <button class="btn btn-primary" onclick="openCreateProjectModal()">
                         + New Project
                     </button>
@@ -45,11 +92,23 @@
             </div>
         </div>
 
+        <!-- Activity View -->
+        <div id="activity-view" style="display:none;">
+            <div class="dashboard-header">
+                <h1>Recent Activity</h1>
+            </div>
+            <div class="glass-card" style="padding:var(--spacing-xl);">
+                <ul class="activity-list" id="activity-list">
+                    <!-- Populated by JS -->
+                </ul>
+            </div>
+        </div>
+
         <!-- Project Detail View -->
         <div class="project-detail" id="project-detail-view">
             <div class="project-detail-header">
                 <button class="back-btn" onclick="closeProjectDetail()">
-                    ← Back to Projects
+                    &larr; Back to Projects
                 </button>
                 <h1 id="detail-project-name" style="font-size:1.5rem;font-weight:800;"></h1>
             </div>
@@ -94,10 +153,11 @@
                 <div id="sheets-list"></div>
                 <div id="sheet-editor-container" style="display:none;">
                     <div class="spreadsheet-toolbar">
-                        <button class="btn btn-ghost btn-sm" onclick="closeSheetEditor()">← Back</button>
+                        <button class="btn btn-ghost btn-sm" onclick="closeSheetEditor()">&larr; Back</button>
                         <span id="sheet-editor-name" style="font-weight:600;font-size:0.95rem;"></span>
                         <div style="flex:1;"></div>
-                        <button class="btn btn-primary btn-sm" onclick="saveSpreadsheet()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg> Save</button>
+                        <button class="btn btn-secondary btn-sm" onclick="exportCSV()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Export CSV</button>
+                        <button class="btn btn-primary btn-sm" onclick="saveSpreadsheet()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg> Save <span class="kbd-hint"><span class="kbd">Ctrl</span>+<span class="kbd">S</span></span></button>
                     </div>
                     <div class="spreadsheet-container" id="spreadsheet-container"></div>
                 </div>

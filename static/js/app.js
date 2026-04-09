@@ -25,12 +25,26 @@ const icons = {
     gridEmpty: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>',
 };
 
+// Activity action labels
+const actionLabels = {
+    created_project: 'Created project',
+    deleted_project: 'Deleted project',
+    updated_project: 'Updated project',
+    added_collaborator: 'Added collaborator',
+    removed_collaborator: 'Removed collaborator',
+    created_spreadsheet: 'Created spreadsheet',
+    deleted_spreadsheet: 'Deleted spreadsheet',
+    uploaded_spreadsheet: 'Uploaded spreadsheet',
+};
+
 // ============================================
 // Init
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
     loadProjects();
+    loadStats();
     setupUploadArea();
+    setupKeyboardShortcuts();
 });
 
 // ============================================
@@ -86,11 +100,53 @@ function switchView(view, btn) {
     document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
     if (btn) btn.classList.add('active');
 
+    // Hide all views
+    document.getElementById('projects-view').style.display = 'none';
+    document.getElementById('activity-view').style.display = 'none';
+    document.getElementById('project-detail-view').classList.remove('active');
+    currentProjectId = null;
+
     if (view === 'projects') {
         document.getElementById('projects-view').style.display = 'block';
-        document.getElementById('project-detail-view').classList.remove('active');
-        currentProjectId = null;
+    } else if (view === 'activity') {
+        document.getElementById('activity-view').style.display = 'block';
+        loadActivity();
     }
+}
+
+// ============================================
+// Dashboard Stats
+// ============================================
+async function loadStats() {
+    try {
+        const stats = await api('/api/stats');
+        animateCounter('stat-projects', stats.projects);
+        animateCounter('stat-collaborators', stats.collaborators);
+        animateCounter('stat-spreadsheets', stats.spreadsheets);
+    } catch (err) {
+        // Stats are non-critical
+    }
+}
+
+function animateCounter(elementId, targetValue) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    const duration = 800;
+    const startTime = performance.now();
+    const startValue = 0;
+
+    function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        // Ease out cubic
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = Math.round(startValue + (targetValue - startValue) * eased);
+        el.textContent = current;
+        if (progress < 1) {
+            requestAnimationFrame(update);
+        }
+    }
+    requestAnimationFrame(update);
 }
 
 // ============================================
@@ -105,7 +161,7 @@ async function loadProjects() {
     }
 }
 
-function renderProjects() {
+function renderProjects(filter = '') {
     const grid = document.getElementById('projects-grid');
     let html = '';
 
@@ -117,12 +173,19 @@ function renderProjects() {
         </div>
     `;
 
-    projects.forEach(p => {
+    const filtered = filter
+        ? projects.filter(p =>
+            p.name.toLowerCase().includes(filter.toLowerCase()) ||
+            (p.description || '').toLowerCase().includes(filter.toLowerCase())
+        )
+        : projects;
+
+    filtered.forEach((p, index) => {
         const date = new Date(p.created_at).toLocaleDateString('en-US', {
             month: 'short', day: 'numeric', year: 'numeric'
         });
         html += `
-            <div class="project-card glass-card" onclick="openProjectDetail(${p.id})">
+            <div class="project-card glass-card" onclick="openProjectDetail(${p.id})" style="animation-delay:${index * 0.06}s;">
                 <div class="project-card-header">
                     <div class="project-card-icon">${icons.folder}</div>
                     <button class="btn btn-icon btn-ghost" onclick="event.stopPropagation();confirmDeleteProject(${p.id})" title="Delete">${icons.trash}</button>
@@ -141,6 +204,11 @@ function renderProjects() {
     grid.innerHTML = html;
 }
 
+function searchProjects() {
+    const q = document.getElementById('search-input').value.trim();
+    renderProjects(q);
+}
+
 function openCreateProjectModal() {
     document.getElementById('new-project-name').value = '';
     document.getElementById('new-project-desc').value = '';
@@ -157,6 +225,7 @@ async function createProject() {
         closeModal('create-project-modal');
         showToast('Project created!', 'success');
         loadProjects();
+        loadStats();
     } catch (err) {
         showToast(err.message, 'error');
     }
@@ -174,6 +243,7 @@ async function deleteProject(id) {
         showToast('Project deleted', 'success');
         if (currentProjectId === id) closeProjectDetail();
         loadProjects();
+        loadStats();
     } catch (err) {
         showToast(err.message, 'error');
     }
@@ -192,6 +262,7 @@ async function openProjectDetail(id) {
     if (!project) return;
 
     document.getElementById('projects-view').style.display = 'none';
+    document.getElementById('activity-view').style.display = 'none';
     document.getElementById('project-detail-view').classList.add('active');
 
     document.getElementById('detail-project-name').textContent = project.name;
@@ -210,6 +281,7 @@ function closeProjectDetail() {
     document.getElementById('projects-view').style.display = 'block';
     currentProjectId = null;
     loadProjects();
+    loadStats();
 }
 
 function switchTab(tabName, btn) {
@@ -306,6 +378,7 @@ async function addCollaborator() {
         showToast('Collaborator added!', 'success');
         loadCollaborators();
         loadProjects(); // Refresh card counts
+        loadStats();
     } catch (err) {
         showToast(err.message, 'error');
     }
@@ -318,6 +391,7 @@ async function removeCollaborator(id) {
         showToast('Collaborator removed', 'success');
         loadCollaborators();
         loadProjects();
+        loadStats();
     } catch (err) {
         showToast(err.message, 'error');
     }
@@ -359,10 +433,10 @@ function renderSheetsList(sheets) {
             <div class="glass-card" style="padding:var(--spacing-lg);margin-bottom:var(--spacing-sm);display:flex;align-items:center;justify-content:space-between;cursor:pointer;"
                  onclick="openSheetEditor(${s.id})">
                 <div style="display:flex;align-items:center;gap:var(--spacing-md);">
-                    <span style="font-size:1.3rem;">${icons.spreadsheet}</span>
+                    <span style="font-size:1.3rem;color:var(--accent-primary);">${icons.spreadsheet}</span>
                     <div>
                         <div style="font-weight:600;font-size:0.95rem;">${escapeHtml(s.name)}</div>
-                        <div style="font-size:0.8rem;color:var(--text-muted);">${s.rows}×${s.cols} · ${date}</div>
+                        <div style="font-size:0.8rem;color:var(--text-muted);">${s.rows}&times;${s.cols} · ${date}</div>
                     </div>
                 </div>
                 <button class="btn btn-danger btn-sm" onclick="event.stopPropagation();deleteSpreadsheet(${s.id})">${icons.trash}</button>
@@ -388,6 +462,7 @@ async function createSpreadsheet() {
         closeModal('create-sheet-modal');
         showToast('Spreadsheet created!', 'success');
         loadSpreadsheets();
+        loadStats();
     } catch (err) {
         showToast(err.message, 'error');
     }
@@ -399,6 +474,7 @@ async function deleteSpreadsheet(id) {
         await api(`/api/spreadsheets/${id}`, 'DELETE');
         showToast('Spreadsheet deleted', 'success');
         loadSpreadsheets();
+        loadStats();
     } catch (err) {
         showToast(err.message, 'error');
     }
@@ -488,6 +564,91 @@ async function saveSpreadsheet() {
 }
 
 // ============================================
+// CSV Export
+// ============================================
+function exportCSV() {
+    if (!currentSheetId) return;
+    // Trigger download via the export endpoint
+    window.location.href = `/api/spreadsheets/${currentSheetId}/export`;
+}
+
+// ============================================
+// Activity Feed
+// ============================================
+async function loadActivity() {
+    try {
+        const activities = await api('/api/activity');
+        renderActivity(activities);
+    } catch (err) {
+        showToast(err.message, 'error');
+    }
+}
+
+function renderActivity(activities) {
+    const list = document.getElementById('activity-list');
+    if (activities.length === 0) {
+        list.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></div>
+                <h3>No activity yet</h3>
+                <p>Your recent actions will appear here.</p>
+            </div>
+        `;
+        return;
+    }
+
+    list.innerHTML = activities.map((a, i) => {
+        const label = actionLabels[a.action] || a.action;
+        const timeAgo = getTimeAgo(a.created_at);
+        return `
+            <li class="activity-item" style="animation-delay:${i * 0.05}s;">
+                <div class="activity-dot"></div>
+                <div>
+                    <div class="activity-text"><strong>${label}</strong> ${escapeHtml(a.target)}</div>
+                    <div class="activity-time">${timeAgo}</div>
+                </div>
+            </li>
+        `;
+    }).join('');
+}
+
+function getTimeAgo(isoString) {
+    const now = new Date();
+    const date = new Date(isoString);
+    const seconds = Math.floor((now - date) / 1000);
+
+    if (seconds < 60) return 'Just now';
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes}m ago`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours}h ago`;
+    const days = Math.floor(hours / 24);
+    if (days < 7) return `${days}d ago`;
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+// ============================================
+// Keyboard Shortcuts
+// ============================================
+function setupKeyboardShortcuts() {
+    document.addEventListener('keydown', (e) => {
+        // Ctrl+S or Cmd+S — save spreadsheet
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+            if (currentSheetId) {
+                e.preventDefault();
+                saveSpreadsheet();
+            }
+        }
+        // Escape — close modals
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.modal-overlay.active').forEach(m => {
+                m.classList.remove('active');
+            });
+        }
+    });
+}
+
+// ============================================
 // File Upload
 // ============================================
 function setupUploadArea() {
@@ -547,6 +708,7 @@ async function uploadExcel() {
         closeModal('upload-modal');
         showToast('File uploaded successfully!', 'success');
         loadSpreadsheets();
+        loadStats();
     } catch (err) {
         showToast(err.message, 'error');
     }

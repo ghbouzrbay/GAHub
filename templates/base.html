@@ -20,7 +20,7 @@
         </a>
         <div class="navbar-links">
             {% if current_user.is_authenticated %}
-            <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle menu">☰</button>
+            <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle menu">&#9776;</button>
             <span style="font-size:0.85rem;color:var(--text-muted)">{{ current_user.username }}</span>
             <a href="{{ url_for('main.logout') }}" class="btn btn-ghost">Logout</a>
             {% else %}

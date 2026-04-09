@@ -1,12 +1,23 @@
 """Flask routes for GAHub."""
 
+import csv
+import io
 import json
 from flask import (Blueprint, render_template, request, redirect,
-                   url_for, flash, jsonify)
+                   url_for, flash, jsonify, Response)
 from flask_login import login_user, logout_user, login_required, current_user
-from models import db, User, Project, Collaborator, Spreadsheet
+from models import db, User, Project, Collaborator, Spreadsheet, Activity
 
 main = Blueprint('main', __name__)
+
+
+# ---------- Helpers ----------
+
+def log_activity(user_id, action, target=''):
+    """Record an activity event."""
+    act = Activity(user_id=user_id, action=action, target=target)
+    db.session.add(act)
+    # commit handled by caller
 
 
 # ---------- Page Routes ----------
@@ -123,6 +134,7 @@ def create_project():
 
     project = Project(name=name, description=description, owner_id=current_user.id)
     db.session.add(project)
+    log_activity(current_user.id, 'created_project', name)
     db.session.commit()
     return jsonify(project.to_dict()), 201
 
@@ -134,6 +146,7 @@ def delete_project(project_id):
     if project.owner_id != current_user.id:
         return jsonify({'error': 'Unauthorized'}), 403
 
+    log_activity(current_user.id, 'deleted_project', project.name)
     db.session.delete(project)
     db.session.commit()
     return jsonify({'message': 'Project deleted'})
@@ -152,6 +165,7 @@ def update_project(project_id):
     if 'description' in data:
         project.description = data['description'].strip()
 
+    log_activity(current_user.id, 'updated_project', project.name)
     db.session.commit()
     return jsonify(project.to_dict())
 
@@ -190,6 +204,7 @@ def add_collaborator(project_id):
 
     collab = Collaborator(user_id=user.id, project_id=project_id, role=role)
     db.session.add(collab)
+    log_activity(current_user.id, 'added_collaborator', f'{username} to {project.name}')
     db.session.commit()
     return jsonify(collab.to_dict()), 201
 
@@ -202,6 +217,8 @@ def remove_collaborator(collab_id):
     if project.owner_id != current_user.id:
         return jsonify({'error': 'Unauthorized'}), 403
 
+    log_activity(current_user.id, 'removed_collaborator',
+                 f'{collab.user.username} from {project.name}')
     db.session.delete(collab)
     db.session.commit()
     return jsonify({'message': 'Collaborator removed'})
@@ -220,7 +237,7 @@ def get_spreadsheets(project_id):
 @main.route('/api/projects/<int:project_id>/spreadsheets', methods=['POST'])
 @login_required
 def create_spreadsheet(project_id):
-    Project.query.get_or_404(project_id)
+    project = Project.query.get_or_404(project_id)
     data = request.get_json()
     name = data.get('name', 'Untitled Spreadsheet').strip()
     rows = data.get('rows', 10)
@@ -232,6 +249,7 @@ def create_spreadsheet(project_id):
     sheet = Spreadsheet(name=name, project_id=project_id,
                         data=grid, rows=rows, cols=cols)
     db.session.add(sheet)
+    log_activity(current_user.id, 'created_spreadsheet', f'{name} in {project.name}')
     db.session.commit()
     return jsonify(sheet.to_dict()), 201
 
@@ -266,9 +284,34 @@ def update_spreadsheet(sheet_id):
 @login_required
 def delete_spreadsheet(sheet_id):
     sheet = Spreadsheet.query.get_or_404(sheet_id)
+    log_activity(current_user.id, 'deleted_spreadsheet', sheet.name)
     db.session.delete(sheet)
     db.session.commit()
     return jsonify({'message': 'Spreadsheet deleted'})
+
+
+# ---------- API Routes — Spreadsheet Export (CSV) ----------
+
+@main.route('/api/spreadsheets/<int:sheet_id>/export', methods=['GET'])
+@login_required
+def export_spreadsheet_csv(sheet_id):
+    """Export spreadsheet data as a CSV download."""
+    sheet = Spreadsheet.query.get_or_404(sheet_id)
+    data = sheet.data or []
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+    for row in data:
+        writer.writerow(row)
+
+    response = Response(
+        output.getvalue(),
+        mimetype='text/csv',
+        headers={
+            'Content-Disposition': f'attachment; filename="{sheet.name}.csv"'
+        }
+    )
+    return response
 
 
 # ---------- API Routes — File Upload ----------
@@ -286,7 +329,7 @@ def upload_excel():
     if not project_id:
         return jsonify({'error': 'Project ID required'}), 400
 
-    Project.query.get_or_404(int(project_id))
+    project = Project.query.get_or_404(int(project_id))
 
     try:
         import openpyxl
@@ -312,6 +355,7 @@ def upload_excel():
         sheet = Spreadsheet(name=name, project_id=int(project_id),
                             data=grid, rows=rows, cols=cols)
         db.session.add(sheet)
+        log_activity(current_user.id, 'uploaded_spreadsheet', f'{name} to {project.name}')
         db.session.commit()
         return jsonify(sheet.to_dict()), 201
 
@@ -332,3 +376,38 @@ def search_users():
         User.id != current_user.id
     ).limit(10).all()
     return jsonify([u.to_dict() for u in users])
+
+
+# ---------- API — Dashboard Stats ----------
+
+@main.route('/api/stats', methods=['GET'])
+@login_required
+def get_stats():
+    """Return aggregate counts for the current user's dashboard."""
+    owned = Project.query.filter_by(owner_id=current_user.id).count()
+    collab_count = Collaborator.query.join(Project).filter(
+        Project.owner_id == current_user.id
+    ).count()
+    sheet_count = Spreadsheet.query.join(Project).filter(
+        Project.owner_id == current_user.id
+    ).count()
+
+    return jsonify({
+        'projects': owned,
+        'collaborators': collab_count,
+        'spreadsheets': sheet_count,
+    })
+
+
+# ---------- API — Activity Feed ----------
+
+@main.route('/api/activity', methods=['GET'])
+@login_required
+def get_activity():
+    """Return the 20 most recent activity events for the current user."""
+    activities = (Activity.query
+                  .filter_by(user_id=current_user.id)
+                  .order_by(Activity.created_at.desc())
+                  .limit(20)
+                  .all())
+    return jsonify([a.to_dict() for a in activities])

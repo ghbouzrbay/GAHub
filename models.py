@@ -22,6 +22,7 @@ class User(UserMixin, db.Model):
     projects = db.relationship('Project', backref='owner', lazy=True,
                                foreign_keys='Project.owner_id')
     collaborations = db.relationship('Collaborator', backref='user', lazy=True)
+    activities = db.relationship('Activity', backref='user', lazy=True)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -115,4 +116,25 @@ class Spreadsheet(db.Model):
             'cols': self.cols,
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'updated_at': self.updated_at.isoformat() if self.updated_at else None,
+        }
+
+
+class Activity(db.Model):
+    """Activity log model — tracks user actions for the activity feed."""
+    __tablename__ = 'activities'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    action = db.Column(db.String(50), nullable=False)   # created_project, deleted_project, etc.
+    target = db.Column(db.String(200), default='')       # Name of the target entity
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'username': self.user.username if self.user else None,
+            'action': self.action,
+            'target': self.target,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
         }

@@ -4,6 +4,15 @@
 {% block content %}
 <!-- Hero Section -->
 <section class="landing-hero">
+    <!-- Floating Shapes -->
+    <div class="floating-shapes">
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
+    </div>
+
     <div class="hero-badge">
         <span class="badge-dot"></span>
         Business Management Reimagined
@@ -20,11 +29,27 @@
 
     <div class="hero-actions">
         <a href="{{ url_for('main.signup') }}" class="btn btn-primary">
-            Get Started Free →
+            Get Started Free &rarr;
         </a>
         <a href="#features" class="btn btn-secondary">
             Explore Features
         </a>
+    </div>
+
+    <!-- Stats Counter -->
+    <div class="stats-counter">
+        <div class="stat-item">
+            <div class="stat-number">500+</div>
+            <div class="stat-label">Active Users</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">1,200+</div>
+            <div class="stat-label">Projects Created</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">99.9%</div>
+            <div class="stat-label">Uptime</div>
+        </div>
     </div>
 </section>
 
@@ -38,11 +63,12 @@
             <div class="feature-card glass-card">
                 <div class="feature-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z">
+                        </path>
                     </svg></div>
                 <h3>Project Management</h3>
-                <p>Create and manage projects effortlessly. Track progress, set descriptions, and organize your team's
-                    work in one place.</p>
+                <p>Create and manage projects effortlessly. Track progress, set descriptions, and organize your work
+                    in one place.</p>
             </div>
 
             <div class="feature-card glass-card">
@@ -54,8 +80,8 @@
                         <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                     </svg></div>
                 <h3>Team Collaboration</h3>
-                <p>Invite collaborators, assign roles, and work together in real-time. Build your team and ship projects
-                    faster.</p>
+                <p>Invite collaborators, assign roles, and work together in real-time. Build your team and ship faster.
+                </p>
             </div>
 
             <div class="feature-card glass-card">
@@ -67,15 +93,45 @@
                         <rect x="3" y="14" width="7" height="7"></rect>
                     </svg></div>
                 <h3>Spreadsheet Editor</h3>
-                <p>Create Excel-like spreadsheets directly in the browser. Upload existing files or start from scratch
-                    with our built-in editor.</p>
+                <p>Create Excel-like spreadsheets in the browser. Upload existing files or start from scratch with our
+                    built-in editor.</p>
+            </div>
+
+            <div class="feature-card glass-card">
+                <div class="feature-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg></div>
+                <h3>File Upload</h3>
+                <p>Upload .xlsx and .xls files and instantly convert them into editable, collaborative spreadsheets.</p>
+            </div>
+
+            <div class="feature-card glass-card">
+                <div class="feature-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg></div>
+                <h3>Secure & Private</h3>
+                <p>Your data is protected with hashed passwords, session management, and role-based access controls.</p>
             </div>
         </div>
     </div>
 </section>
 
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="cta-card">
+        <h2>Ready to supercharge your workflow?</h2>
+        <p>Join hundreds of teams already using GAHub to manage projects and collaborate effectively.</p>
+        <a href="{{ url_for('main.signup') }}" class="btn">Get Started Free &rarr;</a>
+    </div>
+</section>
+
 <!-- Footer -->
 <footer class="landing-footer">
-    <p>© 2024 GAHub — Built by <strong>Adam El Madani</strong> & <strong>Ghita Bouzrbay</strong></p>
+    <p>&copy; 2025 GAHub &mdash; Built by <strong>Adam El Madani</strong> & <strong>Ghita Bouzrbay</strong></p>
 </footer>
 {% endblock %}

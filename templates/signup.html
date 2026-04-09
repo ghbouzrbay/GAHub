@@ -3,37 +3,54 @@
 
 {% block content %}
 <div class="auth-page">
-    <div class="auth-card glass-card">
-        <h1>Create Account</h1>
-        <p class="auth-subtitle">Join GAHub and start collaborating</p>
+    <div class="auth-wrapper">
+        <!-- Illustration Side -->
+        <div class="auth-illustration">
+            <div class="illust-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="8.5" cy="7" r="4"></circle>
+                    <line x1="20" y1="8" x2="20" y2="14"></line>
+                    <line x1="23" y1="11" x2="17" y2="11"></line>
+                </svg>
+            </div>
+            <h2>Join GAHub</h2>
+            <p>Create your account and start managing projects with powerful collaboration tools.</p>
+        </div>
 
-        <form method="POST" action="{{ url_for('main.signup') }}" id="signup-form">
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" class="form-control"
-                       placeholder="johndoe" required autofocus minlength="3">
-            </div>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" class="form-control"
-                       placeholder="you@example.com" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" class="form-control"
-                       placeholder="Min. 6 characters" required minlength="6">
-            </div>
-            <div class="form-group">
-                <label for="confirm_password">Confirm Password</label>
-                <input type="password" id="confirm_password" name="confirm_password" class="form-control"
-                       placeholder="••••••••" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Create Account</button>
-        </form>
+        <!-- Auth Card -->
+        <div class="auth-card glass-card">
+            <h1>Create Account</h1>
+            <p class="auth-subtitle">Join GAHub and start collaborating</p>
 
-        <p class="auth-footer">
-            Already have an account? <a href="{{ url_for('main.login') }}">Sign in</a>
-        </p>
+            <form method="POST" action="{{ url_for('main.signup') }}" id="signup-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" class="form-control"
+                           placeholder="johndoe" required autofocus minlength="3">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" class="form-control"
+                           placeholder="you@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" class="form-control"
+                           placeholder="Min. 6 characters" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label for="confirm_password">Confirm Password</label>
+                    <input type="password" id="confirm_password" name="confirm_password" class="form-control"
+                           placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Create Account</button>
+            </form>
+
+            <p class="auth-footer">
+                Already have an account? <a href="{{ url_for('main.login') }}">Sign in</a>
+            </p>
+        </div>
     </div>
 </div>
 {% endblock %}
