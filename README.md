@@ -3,7 +3,7 @@
 ![Python](https://img.shields.io/badge/Language-Python-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-**GAHub** is a complete and integrated business management solution. It features collaborative workspaces, project management, team collaboration, and an Excel-inspired spreadsheet editor — all in a modern, dark-themed interface.
+**GAHub** is a complete and integrated business management solution. It features collaborative workspaces, project management, team collaboration, and an Excel-inspired spreadsheet editor — all in a premium, blue-and-white design system with glassmorphism and smooth animations.
 
 > Built by **Adam El Madani** & **Ghita Bouzrbay**
 
@@ -11,19 +11,26 @@
   <img src="static/assets/img1.png" width="800" />
   <br><br>
   <img src="static/assets/img2.png" width="800" />
+
+  <img src="static/assets/img3.png" width="800" />
+  <br><br>
+  <img src="static/assets/img4.png" width="800" />
 </div>
 
 ---
 
 ## Features
 
-- **User Authentication** — Secure signup/login with hashed passwords
-- **Project Management** — Create, edit, and delete projects
+- **User Authentication** — Secure signup/login with hashed passwords and session management
+- **Project Management** — Create, edit, and organize projects with real-time stats
 - **Team Collaboration** — Invite collaborators with role-based access (Viewer, Editor, Admin)
-- **Spreadsheet Editor** — Create and edit Excel-like spreadsheets in the browser
-- **File Upload** — Upload `.xlsx` / `.xls` files and convert them to editable spreadsheets
-- **Modern UI** — Dark theme with glassmorphism, gradients, and micro-animations
-- **Responsive** — Works on desktop, tablet, and mobile
+- **Spreadsheet Editor** — Create and edit Excel-like spreadsheets with Ctrl+S saving
+- **Dashboard Stats** — Live counters for projects, collaborators, and spreadsheets
+- **Activity Feed** — Track recent account actions in a chronological timeline
+- **CSV Export** — Download your spreadsheet data for offline use
+- **File Upload** — Convert `.xlsx` / `.xls` files into editable GAHub spreadsheets
+- **Premium UI** — Modern blue & white theme with glassmorphism and micro-animations
+- **Responsive Design** — Fully optimized for desktop, tablet, and mobile devices
 
 ---
 
@@ -198,10 +205,11 @@ All API routes require authentication (session cookie).
 | `GET`    | `/api/spreadsheets/:id`                     | Get spreadsheet data     |
 | `PUT`    | `/api/spreadsheets/:id`                     | Update spreadsheet       |
 | `DELETE` | `/api/spreadsheets/:id`                     | Delete spreadsheet       |
+| `GET`    | `/api/spreadsheets/:id/export`              | Export spreadsheet (CSV) |
 | `POST`   | `/api/upload-excel`                         | Upload Excel file        |
 | `GET`    | `/api/users/search?q=`                      | Search users             |
-
----
+| `GET`    | `/api/stats`                                | Get dashboard stats      |
+| `GET`    | `/api/activity`                             | Get activity feed        |
 
 ## License
 
