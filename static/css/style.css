@@ -1328,6 +1328,11 @@ textarea.form-control {
     color: var(--text-primary);
 }
 
+.modal p {
+    margin-bottom: var(--spacing-lg);
+    color: var(--text-secondary);
+}
+
 .modal-actions {
     display: flex;
     gap: var(--spacing-sm);

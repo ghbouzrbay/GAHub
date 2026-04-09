@@ -65,6 +65,101 @@ function showToast(msg, type = 'info') {
     }, 3500);
 }
 
+/**
+ * Custom-styled confirmation dialog (replaces confirm()).
+ * @param {string} message - The confirmation message.
+ * @returns {Promise<boolean>} - Resolves to true if confirmed, false otherwise.
+ */
+function customConfirm(message) {
+    return new Promise((resolve) => {
+        const modalId = 'custom-confirm-modal';
+        
+        // Remove existing modal to prevent duplicate IDs stacking in the DOM
+        const existingModal = document.getElementById(modalId);
+        if (existingModal) existingModal.remove();
+
+        const modalHTML = `
+            <div class="modal-overlay" id="${modalId}">
+                <div class="modal">
+                    <h2>Confirm</h2>
+                    <p>${message}</p>
+                    <div class="modal-actions">
+                        <button class="btn btn-ghost" id="${modalId}-cancel">Cancel</button>
+                        <button class="btn btn-primary" id="${modalId}-confirm">Confirm</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        
+        // Grab the buttons and attach event listeners inside the Promise scope
+        const cancelBtn = document.getElementById(`${modalId}-cancel`);
+        const confirmBtn = document.getElementById(`${modalId}-confirm`);
+
+        cancelBtn.addEventListener('click', () => {
+            closeModal(modalId);
+            resolve(false);
+        });
+
+        confirmBtn.addEventListener('click', () => {
+            closeModal(modalId);
+            resolve(true);
+        });
+
+        openModal(modalId);
+    });
+}
+
+/**
+ * Custom-styled prompt dialog (replaces prompt()).
+ * @param {string} message - The prompt message.
+ * @param {string} [defaultValue=""] - The default value for the input.
+ * @returns {Promise<string|null>} - Resolves to the input value or null if canceled.
+ */
+function customPrompt(message, defaultValue = '') {
+    return new Promise((resolve) => {
+        const modalId = 'custom-prompt-modal';
+        
+        const existingModal = document.getElementById(modalId);
+        if (existingModal) existingModal.remove();
+
+        const modalHTML = `
+            <div class="modal-overlay" id="${modalId}">
+                <div class="modal">
+                    <h2>Input Required</h2>
+                    <p>${message}</p>
+                    <div class="form-group">
+                        <input type="text" id="${modalId}-input" class="form-control" value="${defaultValue}">
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn btn-ghost" id="${modalId}-cancel">Cancel</button>
+                        <button class="btn btn-primary" id="${modalId}-submit">Submit</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        
+        const cancelBtn = document.getElementById(`${modalId}-cancel`);
+        const submitBtn = document.getElementById(`${modalId}-submit`);
+        const inputField = document.getElementById(`${modalId}-input`);
+
+        cancelBtn.addEventListener('click', () => {
+            closeModal(modalId);
+            resolve(null);
+        });
+
+        submitBtn.addEventListener('click', () => {
+            closeModal(modalId);
+            resolve(inputField.value.trim());
+        });
+
+        openModal(modalId);
+    });
+}
+
 // ============================================
 // API Helper
 // ============================================
@@ -232,9 +327,11 @@ async function createProject() {
 }
 
 function confirmDeleteProject(id) {
-    if (confirm('Are you sure you want to delete this project?')) {
-        deleteProject(id);
-    }
+    customConfirm('Are you sure you want to delete this project?').then((confirmed) => {
+        if (confirmed) {
+            deleteProject(id);
+        }
+    });
 }
 
 async function deleteProject(id) {
@@ -384,8 +481,18 @@ async function addCollaborator() {
     }
 }
 
+function confirmDeleteProject(id) {
+    customConfirm('Are you sure you want to delete this project?').then((confirmed) => {
+        if (confirmed) {
+            deleteProject(id);
+        }
+    });
+}
+
 async function removeCollaborator(id) {
-    if (!confirm('Remove this collaborator?')) return;
+    const confirmed = await customConfirm('Remove this collaborator?');
+    if (!confirmed) return;
+    
     try {
         await api(`/api/collaborators/${id}`, 'DELETE');
         showToast('Collaborator removed', 'success');
@@ -469,7 +576,9 @@ async function createSpreadsheet() {
 }
 
 async function deleteSpreadsheet(id) {
-    if (!confirm('Delete this spreadsheet?')) return;
+    const confirmed = await customConfirm('Delete this spreadsheet?');
+    if (!confirmed) return;
+    
     try {
         await api(`/api/spreadsheets/${id}`, 'DELETE');
         showToast('Spreadsheet deleted', 'success');
